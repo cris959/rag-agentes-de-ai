@@ -97,6 +97,53 @@ PREGUNTA: 'Quiero una excepcion para teletrabajar durante 5 dias'
 
 4- Ejecutá las celdas en orden secuencial para compilar el grafo y lanzar la simulación.
 ___
+
+# 🤖 Agente de Inteligencia Artificial para RR.HH. - "La Escaloneta"
+
+Este proyecto consiste en un agente inteligente de Recursos Humanos desarrollado con una arquitectura modular y escalable. Utiliza **LangGraph** para la gestión del flujo y toma de decisiones (Grafo de Conocimiento), **FAISS** como base de datos vectorial local para el procesamiento de documentos (RAG), y **Groq (Llama 3.3)** como motor de inferencia de lenguaje.
+
+La interfaz gráfica está montada sobre **Gradio**, permitiendo interactuar con el agente en tiempo real.
+
+---
+
+## 📸 Vista Previa de la Aplicación
+![Interfaz de Usuario de La Escaloneta](/multimedia/screenshot_gradio.png)
+
+---
+
+## 🏗️ Arquitectura del Proyecto
+
+El software fue refactorizado desde un entorno lineal (Google Colab) hacia una arquitectura limpia y desacoplada basada en capas de servicios:
+
+* **`services/database.py`**: Gestión de infraestructura vectorial. Descarga el modelo de embeddings `bge-small-en-v1.5`, procesa la carpeta de PDFs locales, fragmenta el texto y persiste el índice FAISS en disco.
+* **`services/llm_service.py`**: Encapsula las directrices corporativas (Prompts) y la comunicación con la API de Groq.
+* **`graph_nodes.py`**: Lógica de control pura del agente. Lee los estados y delega las tareas a los servicios sin acoplar infraestructura.
+* **`app.py`**: Capa de presentación que levanta el servidor web local con Gradio.
+
+---
+
+## 🛠️ Requisitos e Instalación
+
+### 1. Clonar el repositorio e instalar dependencias
+```bash
+git clone [https://github.com/cris959/rag-agentes-de-ai.git](https://github.com/cris959/rag-agentes-de-ai.git)
+cd rag-agentes-de-ai
+pip install langchain-graph langchain-huggingface langchain-community faiss-cpu sentence-transformers pypdf gradio python-dotenv
+```
+2. Configurar Variables de Entorno
+Creá un archivo **.env** en la raíz del proyecto (este archivo está protegido por **.gitignore**):
+
+```Plaintext
+GROQ_API_KEY=tu_api_key_aqui
+```
+3. Cargar Documentación Interna
+Colocá los archivos PDF con las políticas de la empresa dentro de la carpeta **/documentos**. El sistema los indexará automáticamente en la primera ejecución.
+
+4. Correr la Aplicación
+```Bash
+python app.py
+```
+___
 ## 📝 Licencia
 
 Este proyecto está bajo la Licencia MIT. Para más detalles, consulta el archivo [LICENSE](https://github.com/cris959/rag-agentes-de-ai/blob/main/LICENSE) adjunto en este repositorio.
